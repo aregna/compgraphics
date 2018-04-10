@@ -21,51 +21,52 @@
 	     {score:0, health:5, score2:0, health2:5, scene:'main', camera:'none' }
 
 	// Main game control
-  init();
+  	init();
 	initControls();
 	animate();
 
 	/****************************************************************
-		To initialize the scene, we initialize each of its components *
+	  To initialize the scene, we initialize each of its components *
 	****************************************************************/
 	function init(){
-      initPhysijs();
-			scene = initScene();
-			createEndScene();
-			createEndLoseScene();
-			initRenderer();
-			createMainScene();
+      		initPhysijs();
+		scene = initScene();
+		createEndScene();
+		createEndLoseScene();
+		initRenderer();
+		createMainScene();
 	}
 
 	/****************************************************************
-										Defines different game scenes 				        *
+			Defines different game scenes 		        *
 	****************************************************************/
 	function createMainScene(){
-      // setup lighting
-			var light1 = createPointLight();
-			light1.position.set(0,200,20);
-			scene.add(light1);
-			var light0 = new THREE.AmbientLight( 0xffffff,0.25);
-			scene.add(light0);
+		// setup lighting
+		var light1 = createPointLight();
+		light1.position.set(0,200,20);
+		scene.add(light1);
+		var light0 = new THREE.AmbientLight( 0xffffff,0.25);
+		scene.add(light0);
 
-			// create main camera
-			camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-			camera.position.set(0,40,25);
-			camera.lookAt(0,0,-5);
+		// create main camera
+		camera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+		camera.position.set(0,40,25);
+		camera.lookAt(0,0,-5);
 
-			// create the ground and the skybox
-			ground = createGround('grass.png');
-			ground.scale.set(1,.75,1);
-			scene.add(ground);
+		// create the ground and the skybox
+		ground = createGround('grass.png');
+		ground.scale.set(1,.75,1);
+		scene.add(ground);
 
-			var skybox = createSkyBox('sky.jpg',1);
-			scene.add(skybox);
+		var skybox = createSkyBox('sky.jpg',1);
+		scene.add(skybox);
 
-			addBalls();
-			initSuzanneOBJ();
-			playGameMusic();
+		addBalls();
+		initSuzanneOBJ();
+		playGameMusic();
 	}
-
+	
+	/* Done by: Aviya */
 	function createEndScene(){
 		endScene = initScene();
 		endText = createSkyBox('youwon.png',10);
@@ -78,23 +79,23 @@
 		endCamera.position.set(0,50,1);
 		endCamera.lookAt(0,0,0);
 	}
-
-  function createEndLoseScene(){
-    endLoseScene = initScene();
-    endLoseText = createSkyBox('youlose.png',10);
-    endLoseText.rotateZ(Math.PI);
-    endLoseScene.add(endLoseText);
-    var light1 = createPointLight();
-    light1.position.set(0,200,20);
-    endLoseScene.add(light1);
-    endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
-    endCamera.position.set(0,50,-1);
-    endCamera.lookAt(0,0,0);
-
-  }
+	
+	/* Done by: Aviya */
+	 function createEndLoseScene(){
+	    endLoseScene = initScene();
+	    endLoseText = createSkyBox('youlose.png',10);
+	    endLoseText.rotateZ(Math.PI);
+	    endLoseScene.add(endLoseText);
+	    var light1 = createPointLight();
+	    light1.position.set(0,200,20);
+	    endLoseScene.add(light1);
+	    endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+	    endCamera.position.set(0,50,-1);
+	    endCamera.lookAt(0,0,0);
+	 }
 
 	/****************************************************************
-										Adds balls to the scene 										  *
+				Adds balls to the scene 										  *
 	****************************************************************/
 	function randN(n){
 		return Math.random()*n;
@@ -112,7 +113,7 @@
 		return Math.random() * (max - min) + min;
 	}
 
-	/* Added by: Allison & Aviya */
+	/* Added by: Allison */
 	function addBalls(){
 		var numBalls = 75;
 		var colors = [0xAFFC41, 0xAAEFDF, 0x843B62, 0xF497DA, 0xF46036, 0x235789, 0x00A5CF, 0xA60067, 0xF08700, 0x8AC926];
@@ -213,7 +214,7 @@
 	}
 
 	/****************************************************************
-											Sound effects and game music 		 					  *
+			 Sound effects and game music 		 					  
 	****************************************************************/
 
 	/* Plays annoying song in background :)
@@ -252,18 +253,18 @@
 	}
 
 	/****************************************************************
-										Initialize scene 		 					 							  *
+				Initialize scene 		 					 							  *
 	****************************************************************/
 	function initScene(){
 		//scene = new THREE.Scene();
-    var scene = new Physijs.Scene();
+   		 var scene = new Physijs.Scene();
 		return scene;
 	}
 
-  function initPhysijs(){
-    Physijs.scripts.worker = '../js/physijs_worker.js';
-    Physijs.scripts.ammo = '../js/ammo.js';
-  }
+	function initPhysijs(){
+	    Physijs.scripts.worker = '../js/physijs_worker.js';
+	    Physijs.scripts.ammo = '../js/ammo.js';
+	}
 
 	function initRenderer(){
 		renderer = new THREE.WebGLRenderer();
@@ -286,7 +287,7 @@
 	}
 
 	/****************************************************************
-														Create meshes 											  *
+				Create meshes 											  *
 	****************************************************************/
 	function createGround(image){
 		var geometry = new THREE.PlaneGeometry( 200, 100, 128 );
@@ -357,7 +358,7 @@
 	}
 
 	/****************************************************************
-														Avatar Functions										  *
+				Avatar Functions										  
 	****************************************************************/
 	/* Added by: Jin & Jerry */
 	function initSuzanneOBJ(){
@@ -429,8 +430,9 @@
 
 			window.addEventListener( 'keydown', keydown);
 			window.addEventListener( 'keyup',   keyup );
-  }
-
+  	}
+	
+	/* Added by Jerry */
 	function keydown(event){
 		console.log("Keydown: '"+event.key+"'");
 		console.dir(event);
@@ -458,13 +460,14 @@
 			case "n": controls.speed2 = 30; break;
 
 			//for resetting the game
-      case "h": controls.reset = true; break;
+      			case "h": controls.reset = true; break;
 			case ";": gameState.scene = 'youwon'; return;
 			case "r": avatar1.rotation.set(0,0,0); avatar1.__dirtyRotation=true; avatar2.rotation.set(0,0,0); avatar2.__dirtyRotation=true;
 			console.dir(avatar1.rotation); break;
 		}
-}
+	}
 
+	/* Added by Jerry */
 	function keyup(event){
 		switch (event.key){
 			case "w": controls.fwd   = false;  break;
@@ -474,8 +477,8 @@
 			//case "r": controls.up    = false; break;
 			case "f": controls.down  = false; break;
 			case "m": controls.speed = 10; break;
-      case " ": controls.fly = false; break;
-      case "h": controls.reset = false; break;
+     			case " ": controls.fly = false; break;
+     			case "h": controls.reset = false; break;
 			case "y": controls.up = false; break;
 
 			//controls for second hippo
@@ -489,7 +492,7 @@
 
 	/* Updates the hippo avatars motion
 	   Done by: Jin and Jerry */
-  function updateAvatar(){
+	  function updateAvatar(){
 		"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
 		var forward = avatar1.getWorldDirection();
 		var forward2 = avatar2.getWorldDirection();
@@ -504,9 +507,9 @@
 			avatar1.setLinearVelocity(velocity); //stop the xz motion
 		}
 
-    if (controls.fly){
-      avatar1.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
-    }
+		 if (controls.fly){
+			  avatar1.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
+		}
 
 		if (controls.left){
 			avatar1.setAngularVelocity(new THREE.Vector3(0,controls.speed*0.1,0));
@@ -520,9 +523,9 @@
 		} else if (controls.bwd2){
 			avatar2.setLinearVelocity(forward2.multiplyScalar(-controls.speed2));
 		} else {
-		 	var velocity2 = avatar2.getLinearVelocity();
-		 	velocity2.x=velocity2.z=0;
-		 	avatar2.setLinearVelocity(velocity2); //stop the xz motion
+			var velocity2 = avatar2.getLinearVelocity();
+			velocity2.x=velocity2.z=0;
+			avatar2.setLinearVelocity(velocity2); //stop the xz motion
 		 }
 
 		if (controls.left2){
@@ -537,7 +540,7 @@
 		  avatar1.__dirtyPosition = true;
 			avatar2.__dirtyPosition = true;
 		}
-}
+	}
 
 	function updateSuzyOBJ(){
 		var t = clock.getElapsedTime();
@@ -547,21 +550,20 @@
 
 	function animate() {
 		requestAnimationFrame( animate );
-    gameState.camera = camera;
+  		 gameState.camera = camera;
 		switch(gameState.scene) {
 			case "youwon":
 				endText.rotateY(0.005);
 				renderer.render( endScene, endCamera );
 				break;
 
-      case "youlose":
+     			case "youlose":
 				renderer.render( endLoseScene, endCamera);
 				break;
 
 			case "main":
 				updateAvatar();
 				updateSuzyOBJ();
-
 
 	    	scene.simulate();
 				if (gameState.camera!= 'none'){
@@ -573,12 +575,12 @@
 			  console.log("don't know the scene "+gameState.scene);
 		}
 
-		/* Display to the user their score
-		   Done by: Allison */
+	/* Display to the user their score
+	    Done by: Jerry and Allison */
 	  var info = document.getElementById("info");
 		var infohippo2 = document.getElementById("infohippo2");
 		info.innerHTML='<div style="font-size:15pt;color:orange;text-align:left">Score 1: ' + gameState.score +
 										' Health 1: '+ gameState.health + '</div>';
 		infohippo2.innerHTML='<div style="font-size:15pt;color:red;text-align:left">Score 2: ' + gameState.score2 +
 																		' Health 2: '+ gameState.health2 + '</div>';
-	}
+}
