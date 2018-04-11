@@ -1,6 +1,7 @@
 /*
  * PA03 Group J-Crew
  */
+	console.log("Welcome to Hungry Hungry Hippos");
 
 	// Global variable declarations
 	var scene, renderer;
@@ -11,7 +12,7 @@
 	var theObj;
 	var ground;
 	var clock;
-	var endScene, endLoseScene, endCamera, endText;
+	var endScene, endLoseScene, endCamera, endText, endLoseText;
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false, up:false,
@@ -29,7 +30,7 @@
 	  To initialize the scene, we initialize each of its components *
 	****************************************************************/
 	function init(){
-      		initPhysijs();
+   		initPhysijs();
 		scene = initScene();
 		createEndScene();
 		createEndLoseScene();
@@ -65,7 +66,7 @@
 		initSuzanneOBJ();
 		playGameMusic();
 	}
-	
+
 	/* Done by: Aviya */
 	function createEndScene(){
 		endScene = initScene();
@@ -79,12 +80,11 @@
 		endCamera.position.set(0,50,1);
 		endCamera.lookAt(0,0,0);
 	}
-	
+
 	/* Done by: Aviya */
 	 function createEndLoseScene(){
 	    endLoseScene = initScene();
 	    endLoseText = createSkyBox('youlose.png',10);
-	    endLoseText.rotateZ(Math.PI);
 	    endLoseScene.add(endLoseText);
 	    var light1 = createPointLight();
 	    light1.position.set(0,200,20);
@@ -214,7 +214,7 @@
 	}
 
 	/****************************************************************
-			 Sound effects and game music 		 					  
+			 Sound effects and game music
 	****************************************************************/
 
 	/* Plays annoying song in background :)
@@ -358,7 +358,7 @@
 	}
 
 	/****************************************************************
-				Avatar Functions										  
+				Avatar Functions
 	****************************************************************/
 	/* Added by: Jin & Jerry */
 	function initSuzanneOBJ(){
@@ -431,7 +431,7 @@
 			window.addEventListener( 'keydown', keydown);
 			window.addEventListener( 'keyup',   keyup );
   	}
-	
+
 	/* Added by Jerry */
 	function keydown(event){
 		console.log("Keydown: '"+event.key+"'");
@@ -440,6 +440,9 @@
 		if ((gameState.scene == 'youwon' && event.key=='r') || (gameState.scene == 'youlose' && event.key=='r')) {
 			gameState.scene = 'main';
 			gameState.score = 0;
+			gameState.health = 5;
+			gameState.score2 = 0;
+			gameState.health2 = 5;
 			addBalls();
 			return;
 		}
@@ -582,5 +585,5 @@
 		info.innerHTML='<div style="font-size:15pt;color:orange;text-align:left">Score 1: ' + gameState.score +
 										' Health 1: '+ gameState.health + '</div>';
 		infohippo2.innerHTML='<div style="font-size:15pt;color:red;text-align:left">Score 2: ' + gameState.score2 +
-																		' Health 2: '+ gameState.health2 + '</div>';
+		 																' Health 2: '+ gameState.health2 + '</div>';
 }
