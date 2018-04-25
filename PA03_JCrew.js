@@ -490,7 +490,7 @@
 	****************************************************************/
 	function createGround(image){
 		var geometry = new THREE.PlaneGeometry( 200, 100, 128 );
-		var texture = new THREE.TextureLoader().load( '../images/'+image );
+		var texture = new THREE.TextureLoader().load( '/images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 15, 15 );
