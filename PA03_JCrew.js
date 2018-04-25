@@ -123,7 +123,7 @@
 		})
 
 
-		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		loader.load( 'fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar2 Health: "+gameState.health2, {
 				font: font,
@@ -141,7 +141,7 @@
 			textMesh2.rotation.x=-.9;
 			scene.add(textMesh2);
 		})
-		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		loader.load( 'fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar1 Score: "+gameState.score, {
 				font: font,
@@ -159,7 +159,7 @@
 			textMesh3.rotation.x=-.9;
 			scene.add(textMesh3);
 		})
-		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		loader.load( 'fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar2 Score: "+gameState.score2, {
 				font: font,
@@ -191,12 +191,11 @@
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				if (other_object==avatar1){
 						console.log("npc"+i+" hit the avatar");
-						// soundEffect('good.wav');
 						gameState.health=gameState.health-1;
 						console.log(gameState.health);
 						if(gameState.health==0){
-										console.log("minus");
-										gameState.scene='youlose';
+							console.log("minus");
+							gameState.scene='youlose';
 						}
 				this.position.y = this.position.y - 100;
 				this.__dirtyPosition = true;
@@ -217,7 +216,6 @@
       function( other_object, relative_velocity, relative_rotation, contact_normal ) {
         if (other_object==avatar2){
             console.log("npc"+i+" hit the avatar");
-            // soundEffect('good.wav');
             gameState.health2=gameState.health2-1;
             console.log(gameState.health2);
             if(gameState.health2==0){
@@ -461,8 +459,8 @@
 	}
 
 	function initPhysijs(){
-	    Physijs.scripts.worker = 'js/physijs_worker.js';
-	    Physijs.scripts.ammo = 'js/ammo.js';
+	    Physijs.scripts.worker = '/js/physijs_worker.js';
+	    Physijs.scripts.ammo = '/js/ammo.js';
 	}
 
 	function initRenderer(){
@@ -504,7 +502,7 @@
 
 	function createSkyBox(image,k){
 		var geometry = new THREE.SphereGeometry(400, 20, 20 );
-		var texture = new THREE.TextureLoader().load( '../images/'+image );
+		var texture = new THREE.TextureLoader().load( '/images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( k, k );
@@ -517,7 +515,7 @@
   // Added by Jerry
 	function createPlaneBox(image){
 		var geometry = new THREE.PlaneGeometry(400, 258, 200 );
-		var texture = new THREE.TextureLoader().load( '../images/'+image );
+		var texture = new THREE.TextureLoader().load( '/images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
     texture.repeat.x = - 1;
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
@@ -564,7 +562,7 @@
 	/* Added by: Allison and Alex */
 	function createHealthDownBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-    var texture = new THREE.TextureLoader().load( '../images/NewWhite.jpg' );
+    var texture = new THREE.TextureLoader().load( '/images/NewWhite.jpg' );
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set( 0.1, 0.1 );
@@ -605,7 +603,7 @@
 	var loader5 = new THREE.OBJLoader();
 	var loader6 = new THREE.OBJLoader();
 
-		loader.load("../models/hipp.obj",
+		loader.load("/models/hipp.obj",
 				function ( obj ) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -633,7 +631,7 @@
 				}
 			)
 
-			loader2.load("../models/hipp.obj",
+			loader2.load("/models/hipp.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -663,7 +661,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader3.load("../models/Palm1.obj",
+			loader3.load("/models/Palm1.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -690,7 +688,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader4.load("../models/Palm2.obj",
+			loader4.load("/models/Palm2.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -717,7 +715,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader5.load("../models/Palm3.obj",
+			loader5.load("/models/Palm3.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -744,7 +742,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader6.load("../models/Palm4.obj",
+			loader6.load("/models/Palm4.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -874,7 +872,7 @@
 
 			console.log(textGeometry)
 			var loader = new THREE.FontLoader();
-			loader.load( '../fonts/helvetiker_regular.typeface.json',
+			loader.load( '/fonts/helvetiker_regular.typeface.json',
 			function ( font ) {
 					textGeometry = new THREE.TextGeometry( "Avatar1 Health: "+gameState.health, {
 					font: font,
@@ -904,7 +902,7 @@
 			textMesh3._dirtyPosition=true;
 			textMesh3.position.set(0,-100,0);
 			var loader = new THREE.FontLoader();
-		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		loader.load( '/fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar1 Score: "+gameState.score, {
 				font: font,
@@ -938,7 +936,7 @@
       textMesh2.position.set(0,-100,0);
       console.log(textGeometry)
       var loader = new THREE.FontLoader();
-      loader.load( '../fonts/helvetiker_regular.typeface.json',
+      loader.load( '/fonts/helvetiker_regular.typeface.json',
       function ( font ) {
           textGeometry = new THREE.TextGeometry( "Avatar2 Health: "+gameState.health2, {
           font: font,
@@ -967,7 +965,7 @@
     textMesh4._dirtyPosition=true;
     textMesh4.position.set(0,-100,0);
       var loader = new THREE.FontLoader();
-      loader.load( '../fonts/helvetiker_regular.typeface.json',
+      loader.load( '/fonts/helvetiker_regular.typeface.json',
      function ( font ) {
       textGeometry = new THREE.TextGeometry( "Avatar2 Score: "+gameState.score2, {
       font: font,
