@@ -2,7 +2,6 @@
  * PA03 Group J-Crew
  */
 	console.log("Welcome to Hungry Hungry Hippos");
-
 	// Global variable declarations
 	var scene, renderer;
 	var camera, avatarCam;
@@ -12,36 +11,75 @@
 	var theObj;
 	var ground;
 	var clock;
+	var sound;
+	var begin = true;
+	var start = true;
 	var endScene, endLoseScene, endCamera, endText, endLoseText;
+	var startScene;
+	var textMesh;
+	var textMesh2;
+	var textMesh3;
+	var textMesh4;
+	var textGeometry
+	var health=5
+	var health2=5;
+	var score= 0;
+	var score2=0;
+	var wall1, wall2, wall3;
+	var npc;
+	var npc1;
+  var loader = new THREE.FontLoader();
+	var play = true;
 
 	var controls =
 	     {fwd:false, bwd:false, left:false, right:false, up:false,
 				speed:10,speed2:10, fly:false, reset:false, fwd2:false, bwd2:false, left2:false, right2:false}
 
 	var gameState =
-	     {score:0, health:5, score2:0, health2:5, scene:'main', camera:'none' }
+	     {score:0, health:5, score2:0, health2:5, scene:'start', camera:'none' }
 
 	// Main game control
-  	init();
+  init();
 	initControls();
+	createStartScene();
 	animate();
 
 	/****************************************************************
 	  To initialize the scene, we initialize each of its components *
 	****************************************************************/
 	function init(){
-   		initPhysijs();
+   	initPhysijs();
 		scene = initScene();
-		createEndScene();
-		createEndLoseScene();
 		initRenderer();
 		createMainScene();
+	}
+
+	function initEndScenes(){
+		createEndScene();
+		createEndLoseScene();
 	}
 
 	/****************************************************************
 			Defines different game scenes 		        *
 	****************************************************************/
 	function createMainScene(){
+
+		//Added by Aviya Zarur
+		wall1 = createBoxMesh(0x0000ff);
+		wall1.position.set(93,2,-8);
+		wall1.scale.set(1,2,60);
+		scene.add(wall1);
+
+		wall2 = createBoxMesh(0x0000ff);
+		wall2.position.set(-93,2,-8);
+		wall2.scale.set(1,2,60);
+		scene.add(wall2);
+
+		wall3 = createBoxMesh(0x0000ff);
+		wall3.position.set(0,2,-35);
+		wall3.scale.set(190,2,2);
+		scene.add(wall3);
+
 		// setup lighting
 		var light1 = createPointLight();
 		light1.position.set(0,200,20);
@@ -62,16 +100,166 @@
 		var skybox = createSkyBox('sky.jpg',1);
 		scene.add(skybox);
 
+		// Four text meshes for scores and health
+    // Added by Jerry
+		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		function ( font ) {
+				textGeometry = new THREE.TextGeometry( "Avatar1 Health: "+gameState.health, {
+				font: font,
+				size: 3,
+				height: 0.2,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.01,
+				bevelSize: 0.08,
+				bevelSegments: 5
+			} );
+			var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+			textMesh = new THREE.Mesh( textGeometry, textMaterial );
+			textMesh.position.set(-40,30,-20);
+			textMesh.rotation.x=-.9;
+			textMesh.name= "Text";
+			scene.add(textMesh);
+		})
+
+
+		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		function ( font ) {
+				textGeometry = new THREE.TextGeometry( "Avatar2 Health: "+gameState.health2, {
+				font: font,
+				size: 3,
+				height: 0.2,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.01,
+				bevelSize: 0.08,
+				bevelSegments: 5
+			} );
+			var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+			textMesh2 = new THREE.Mesh( textGeometry, textMaterial );
+			textMesh2.position.set(15,30,-20);
+			textMesh2.rotation.x=-.9;
+			scene.add(textMesh2);
+		})
+		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		function ( font ) {
+				textGeometry = new THREE.TextGeometry( "Avatar1 Score: "+gameState.score, {
+				font: font,
+				size: 3,
+				height: 0.2,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.01,
+				bevelSize: 0.08,
+				bevelSegments: 5
+			} );
+			var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+			textMesh3 = new THREE.Mesh( textGeometry, textMaterial );
+			textMesh3.position.set(-40,20,-20);
+			textMesh3.rotation.x=-.9;
+			scene.add(textMesh3);
+		})
+		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		function ( font ) {
+				textGeometry = new THREE.TextGeometry( "Avatar2 Score: "+gameState.score2, {
+				font: font,
+				size: 3,
+				height: 0.2,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.01,
+				bevelSize: 0.08,
+				bevelSegments: 5
+			} );
+			var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+			textMesh4 = new THREE.Mesh( textGeometry, textMaterial );
+			textMesh4.position.set(15,20,-20);
+			textMesh4.rotation.x=-.9;
+			scene.add(textMesh4);
+		})
+
+
 		addBalls();
 		initSuzanneOBJ();
 		playGameMusic();
-	}
 
-	/* Done by: Aviya */
+	//NPC by Aviya Zarur
+		npc = createBoxMesh2(0x0000ff,1,2,4);
+		npc.position.set(-30,5,-30);
+		//npc.scale.set(1,2,4);
+		npc.addEventListener( 'collision',
+			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+				if (other_object==avatar1){
+						console.log("npc"+i+" hit the avatar");
+						// soundEffect('good.wav');
+						gameState.health=gameState.health-1;
+						console.log(gameState.health);
+						if(gameState.health==0){
+										console.log("minus");
+										gameState.scene='youlose';
+						}
+				this.position.y = this.position.y - 100;
+				this.__dirtyPosition = true;
+				npc.__dirtyPosition = true;
+				npc.position.set(Math.random()*40, 5,Math.random()*40);
+				}
+			}
+		)
+		scene.add(npc);
+		console.dir(npc);
+
+
+  //NPC by Aviya Zarur
+    npc1 = createBoxMesh2(0xff0000,1,2,4);
+    npc1.position.set(30,5,-30);
+    //npc.scale.set(1,2,4);
+    npc1.addEventListener( 'collision',
+      function( other_object, relative_velocity, relative_rotation, contact_normal ) {
+        if (other_object==avatar2){
+            console.log("npc"+i+" hit the avatar");
+            // soundEffect('good.wav');
+            gameState.health2=gameState.health2-1;
+            console.log(gameState.health2);
+            if(gameState.health2==0){
+                    console.log("minus");
+                    gameState.scene='youlose';
+            }
+        this.position.y = this.position.y - 100;
+        this.__dirtyPosition = true;
+        npc1.__dirtyPosition = true;
+        npc1.position.set(Math.random()*70, 5,Math.random()*40);
+        }
+      }
+    )
+    scene.add(npc1);
+    console.dir(npc1);
+
+  }
+  /* Done by: Jerry */
+  function createStartScene(){
+    startScene = initScene();
+    var startText = createPlaneBox('start.png');
+    startScene.add(startText);
+    var light1 = createPointLight();
+    light1.position.set(0,150,-100);
+    startScene.add(light1);
+    var light2 = createPointLight();
+    light2.position.set(0,200,20);
+    endCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+    endCamera.position.set(0,50,1);
+    endCamera.lookAt(0,0,0);
+  }
+	/* Done by: Aviya & Allison */
 	function createEndScene(){
+		sound.stop();
+		begin = false;
 		endScene = initScene();
-		endText = createSkyBox('youwon.png',10);
-		//endText.rotateX(Math.PI);
+		if(gameState.score == 5) { //yellow hippo won
+			var winFile = 'yellow_win_2.png';
+		}else { //red hippo must have won
+			var winFile = 'red_win_2.png';
+		}
+		endText = createSkyBox(winFile,10);
 		endScene.add(endText);
 		var light1 = createPointLight();
 		light1.position.set(0,200,20);
@@ -81,10 +269,17 @@
 		endCamera.lookAt(0,0,0);
 	}
 
-	/* Done by: Aviya */
+	/* Done by: Aviya & Allison */
 	 function createEndLoseScene(){
+		 sound.stop();
+		 begin = false;
 	    endLoseScene = initScene();
-	    endLoseText = createSkyBox('youlose.png',10);
+			if(gameState.health < 0) { //yellow hippo lost
+				var loseFile = 'yellow_lose_2.png';
+			}else { //red hippo must have lost
+				var loseFile = 'red_lose_2.png';
+			}
+			endLoseText = createSkyBox(loseFile,20);
 	    endLoseScene.add(endLoseText);
 	    var light1 = createPointLight();
 	    light1.position.set(0,200,20);
@@ -130,7 +325,8 @@
 			 			console.log("Another ball was eaten!");
 			 			soundEffect('good.wav');
 			 			gameState.score += 1;  // add one to the score
-			 			if (gameState.score== 5) {
+			 			if (gameState.score>= 5) {
+							initEndScenes();
 			 				gameState.scene='youwon';
 			 			}
 			 			// make the ball drop below the scene ..
@@ -141,7 +337,8 @@
 			 			console.log("Another ball was eaten!");
 			 			soundEffect('good.wav');
 			 			gameState.score2 += 1;  // add one to the score
-			 			if (gameState.score2== 5) {
+			 			if (gameState.score2>= 5) {
+							initEndScenes();
 			 				gameState.scene='youwon';
 			 			}
 			 			// make the ball drop below the scene ..
@@ -163,6 +360,7 @@
 							soundEffect('bad.wav');
 							gameState.health -= 1;  // add one to the score
 							if (gameState.health < 0) {
+								initEndScenes();
 								gameState.scene='youlose';
 							}
 							// make the ball drop below the scene ..
@@ -174,6 +372,7 @@
 							soundEffect('bad.wav');
 							gameState.health2 -= 1;  // add one to the score
 							if (gameState.health2 < 0) {
+								initEndScenes();
 								gameState.scene='youlose';
 							}
 							// make the ball drop below the scene ..
@@ -222,7 +421,7 @@
 	function playGameMusic(){
 		var listener = new THREE.AudioListener();
 		camera.add( listener );
-		var sound = new THREE.Audio( listener );
+		sound = new THREE.Audio( listener );
 
 		// load a sound and set it as the Audio object's buffer
 		var audioLoader = new THREE.AudioLoader();
@@ -295,7 +494,7 @@
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 15, 15 );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
 		var pmaterial = new Physijs.createMaterial(material,0.9,0.05);
 		var mesh = new Physijs.BoxMesh( geometry, pmaterial, 0 );
 		mesh.receiveShadow = true;
@@ -309,9 +508,42 @@
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( k, k );
-		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture ,side:THREE.DoubleSide} );
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
 		var mesh = new THREE.Mesh( geometry, material, 0 );
 		mesh.receiveShadow = false;
+		return mesh;
+	}
+	// Plane for start scene
+  // Added by Jerry
+	function createPlaneBox(image){
+		var geometry = new THREE.PlaneGeometry(400, 258, 200 );
+		var texture = new THREE.TextureLoader().load( '../images/'+image );
+		texture.wrapS = THREE.RepeatWrapping;
+    texture.repeat.x = - 1;
+		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
+		var mesh = new THREE.Mesh( geometry, material, 0 );
+		mesh.position.y=-2
+		mesh.rotateX(Math.PI/8);
+		return mesh;
+	}
+
+	/*added by Aviya Zarur*/
+	function createBoxMesh(color){
+		var geometry = new THREE.BoxGeometry( 1, 1, 1);
+		var material = new THREE.MeshLambertMaterial( { color: color} );
+		mesh = new Physijs.BoxMesh( geometry, material );
+		mesh = new Physijs.BoxMesh( geometry, material,0 );
+		mesh.castShadow = true;
+		return mesh;
+	}
+
+	//Added by Aviya Zarur
+	function createBoxMesh2(color,w,h,d){
+		var geometry = new THREE.BoxGeometry( w, h, d);
+		var material = new THREE.MeshLambertMaterial( { color: color} );
+		mesh = new Physijs.BoxMesh( geometry, material );
+		//mesh = new Physijs.BoxMesh( geometry, material,0 );
+		mesh.castShadow = true;
 		return mesh;
 	}
 
@@ -329,10 +561,14 @@
 		return mesh;
 	}
 
-	/* Added by: Allison */
+	/* Added by: Allison and Alex */
 	function createHealthDownBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-		var material = new THREE.MeshLambertMaterial( { color: 0xFAF9F9, wireframe: false} );
+    var texture = new THREE.TextureLoader().load( '../images/NewWhite.jpg' );
+                texture.wrapS = THREE.RepeatWrapping;
+                texture.wrapT = THREE.RepeatWrapping;
+                texture.repeat.set( 0.1, 0.1 );
+                var material = new THREE.MeshLambertMaterial( { color: 0xFAF9F9,  map: texture ,side:THREE.DoubleSide} );
 		var pmaterial = new Physijs.createMaterial(material, 0.9, 0.95);
 		var mesh = new Physijs.BoxMesh( geometry, pmaterial );
 		var linearDamping = .1;
@@ -362,8 +598,12 @@
 	****************************************************************/
 	/* Added by: Jin & Jerry */
 	function initSuzanneOBJ(){
-		var loader = new THREE.OBJLoader();
-		var loader2 = new THREE.OBJLoader();
+	var loader = new THREE.OBJLoader();
+	var loader2 = new THREE.OBJLoader();
+	var loader3 = new THREE.OBJLoader();
+	var loader4 = new THREE.OBJLoader();
+	var loader5 = new THREE.OBJLoader();
+	var loader6 = new THREE.OBJLoader();
 
 		loader.load("../models/hipp.obj",
 				function ( obj ) {
@@ -422,7 +662,116 @@
 				function(err){
 					console.log("error in loading: "+err);}
 			)
+
+			loader3.load("../models/Palm1.obj",
+				function ( obj) {
+					console.log("loading obj file");
+					console.dir(obj);
+					obj.castShadow = true;
+					tOBJ = obj;
+
+					var geometry3 = tOBJ.children[0].geometry;
+					var material3 = tOBJ.children[0].material;
+					tOBJ = new Physijs.BoxMesh(geometry3,material3,0);
+
+					tOBJ.position.set(-65,0,10);
+					tOBJ.castShadow=true;
+
+					tOBJ.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh )
+								child.material.color.setRGB (0, 1, 0);
+					 } );
+					scene.add(tOBJ);
+				},
+				function(xhr){
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
+
+				function(err){
+					console.log("error in loading: "+err);}
+			)
+
+			loader4.load("../models/Palm2.obj",
+				function ( obj) {
+					console.log("loading obj file");
+					console.dir(obj);
+					obj.castShadow = true;
+					tOBJ2 = obj;
+
+					var geometry4 = tOBJ2.children[0].geometry;
+					var material4 = tOBJ2.children[0].material;
+					tOBJ2 = new Physijs.BoxMesh(geometry4,material4,0);
+
+					tOBJ2.position.set(70,0,5);
+					tOBJ2.castShadow=true;
+
+					tOBJ2.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh )
+								child.material.color.setRGB (0, 1, 0);
+					 } );
+					scene.add(tOBJ2);
+				},
+				function(xhr){
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
+
+				function(err){
+					console.log("error in loading: "+err);}
+			)
+
+			loader5.load("../models/Palm3.obj",
+				function ( obj) {
+					console.log("loading obj file");
+					console.dir(obj);
+					obj.castShadow = true;
+					tOBJ3 = obj;
+
+					var geometry5 = tOBJ3.children[0].geometry;
+					var material5 = tOBJ3.children[0].material;
+					tOBJ3 = new Physijs.BoxMesh(geometry5,material5,0);
+
+					tOBJ3.position.set(-80,0,-20);
+					tOBJ3.castShadow=true;
+
+					tOBJ3.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh )
+								child.material.color.setRGB (0, 1, 0);
+					 } );
+					scene.add(tOBJ3);
+				},
+				function(xhr){
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
+
+				function(err){
+					console.log("error in loading: "+err);}
+			)
+
+			loader6.load("../models/Palm4.obj",
+				function ( obj) {
+					console.log("loading obj file");
+					console.dir(obj);
+					obj.castShadow = true;
+					tOBJ4 = obj;
+
+					var geometry6 = tOBJ4.children[0].geometry;
+					var material6 = tOBJ4.children[0].material;
+					tOBJ4 = new Physijs.BoxMesh(geometry6,material6,0);
+
+					tOBJ4.position.set(80,0,-20);
+					tOBJ4.castShadow=true;
+
+					tOBJ4.traverse( function ( child ) {
+						if ( child instanceof THREE.Mesh )
+								child.material.color.setRGB (0, 1, 0);
+					 } );
+					scene.add(tOBJ4);
+				},
+				function(xhr){
+					console.log( (xhr.loaded / xhr.total * 100) + '% loaded' );},
+
+				function(err){
+					console.log("error in loading: "+err);}
+			)
 		}
+
 
 	function initControls(){
 			clock = new THREE.Clock();
@@ -434,116 +783,277 @@
 
 	/* Added by Jerry */
 	function keydown(event){
-		console.log("Keydown: '"+event.key+"'");
-		console.dir(event);
 		//if the game is in a winning state and the user wants to play again, change the scene back to main
 		if ((gameState.scene == 'youwon' && event.key=='r') || (gameState.scene == 'youlose' && event.key=='r')) {
 			gameState.scene = 'main';
+			sound.play();
 			gameState.score = 0;
-			gameState.health = 5;
 			gameState.score2 = 0;
+			gameState.health = 5;
 			gameState.health2 = 5;
-			addBalls();
+			controls.reset1 = true;
+			controls.reset2 = true;
+			begin = true;
 			return;
 		}
 		//if the game is not in a winning state, determine moves based on key events
 		switch (event.key){
 			// change the way the avatar1 is moving
-			case "w": controls.fwd = true;  break;
-			case "s": controls.bwd = true; break;
+			case "s": controls.fwd = true;  break;
+			case "w": controls.bwd = true; break;
 			case "a": controls.left = true; break;
 			case "d": controls.right = true; break;
-			case "m": controls.speed = 30; break;
+			case "x": controls.speed = 30; break;
+			case "e": controls.fly = true; break;
+			case "f": controls.reset1 = true; break;
+			case " ": gameState.scene='main'; start=false;break;
+			case "m": play = !play; break;
 
 			// change the way the avatar2 is moving
-			case "i": controls.fwd2 = true;  break;
-			case "k": controls.bwd2 = true; break;
+			case "k": controls.fwd2 = true;  break;
+			case "i": controls.bwd2 = true; break;
 			case "j": controls.left2 = true; break;
 			case "l": controls.right2 = true; break;
 			case "n": controls.speed2 = 30; break;
+			case "u": controls.fly2=true; break;
+			case "h": controls.reset2 = true; break;
 
-			//for resetting the game
-      			case "h": controls.reset = true; break;
-			case ";": gameState.scene = 'youwon'; return;
-			case "r": avatar1.rotation.set(0,0,0); avatar1.__dirtyRotation=true; avatar2.rotation.set(0,0,0); avatar2.__dirtyRotation=true;
-			console.dir(avatar1.rotation); break;
+			//reset both avatars
+			case "r":  controls.reset1 = true; break;controls.reset2 = true; break;
 		}
-	}
+}
 
-	/* Added by Jerry */
+		function updateNPC(){
+			npc.lookAt(avatar1.position);
+			npc.__dirtyPosition = true;
+			if(avatar1.position.x-npc.position.x<20 && npc.position.x-avatar1.position.x<20){
+					console.log(avatar1.position.x-npc.position.x);
+					npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(1));
+			}
+		}
+
+		function updateNPC1(){
+			npc1.lookAt(avatar2.position);
+			npc1.__dirtyPosition = true;
+			if(avatar2.position.x-npc1.position.x<20 && npc1.position.x-avatar2.position.x<20){
+					console.log(avatar2.position.x-npc1.position.x);
+					npc1.setLinearVelocity(npc1.getWorldDirection().multiplyScalar(1));
+			}
+		}
+
 	function keyup(event){
 		switch (event.key){
-			case "w": controls.fwd   = false;  break;
-			case "s": controls.bwd   = false; break;
+			case "s": controls.fwd   = false;  break;
+			case "w": controls.bwd   = false; break;
 			case "a": controls.left  = false; break;
 			case "d": controls.right = false; break;
-			//case "r": controls.up    = false; break;
-			case "f": controls.down  = false; break;
-			case "m": controls.speed = 10; break;
-     			case " ": controls.fly = false; break;
-     			case "h": controls.reset = false; break;
-			case "y": controls.up = false; break;
-
+			case "x": controls.speed = 10; break;
+			case "e": controls.fly=false; break;
+			case "f": controls.reset1 = false; break;
 			//controls for second hippo
-			case "i": controls.fwd2 = false;  break;
-			case "k": controls.bwd2 = false; break;
+			case "k": controls.fwd2 = false;  break;
+			case "i": controls.bwd2 = false; break;
 			case "j": controls.left2 = false; break;
 			case "l": controls.right2 = false; break;
 			case "n": controls.speed2 = 10; break;
+			case "u": controls.fly2=false; break;
+			case "h": controls.reset2 = false; break;
 		}
 	}
+	// Done by: Jerry
+	function updateText() {
+		if(gameState.health!=health){
+			if(gameState.health<health){
+				health=health-1;
+			}
+			if(gameState.health>health){
+				health=health+1
+			}
+			textMesh._dirtyPosition=true;
+			textMesh.position.set(0,-100,0);
+
+			console.log(textGeometry)
+			var loader = new THREE.FontLoader();
+			loader.load( '../fonts/helvetiker_regular.typeface.json',
+			function ( font ) {
+					textGeometry = new THREE.TextGeometry( "Avatar1 Health: "+gameState.health, {
+					font: font,
+					size: 3,
+					height: 0.2,
+					curveSegments: 12,
+					bevelEnabled: true,
+					bevelThickness: 0.01,
+					bevelSize: 0.08,
+					bevelSegments: 5
+				} );
+				var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+				textMesh = new THREE.Mesh( textGeometry, textMaterial );
+				textMesh.position.set(-40,30,-20);
+				textMesh.rotation.x=-.9;
+				scene.add(textMesh)
+
+		})
+	}
+		if(gameState.score!=score) {
+			if(gameState.score>score) {
+				score=score+1;
+			}
+			if(gameState.score<score) {
+				score=score-1;
+			}
+			textMesh3._dirtyPosition=true;
+			textMesh3.position.set(0,-100,0);
+			var loader = new THREE.FontLoader();
+		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		function ( font ) {
+				textGeometry = new THREE.TextGeometry( "Avatar1 Score: "+gameState.score, {
+				font: font,
+				size: 3,
+				height: 0.2,
+				curveSegments: 12,
+				bevelEnabled: true,
+				bevelThickness: 0.01,
+				bevelSize: 0.08,
+				bevelSegments: 5
+			} );
+			var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+			textMesh3 = new THREE.Mesh( textGeometry, textMaterial );
+			textMesh3.position.set(-40,20,-20);
+			textMesh3.rotation.x=-.9;
+			scene.add(textMesh3);
+		})
+
+	}
+}
+  // Done by: Jerry
+  function updateText2() {
+    if(gameState.health2!=health2){
+      if(gameState.health2<health2){
+        health2=health2-1;
+      }
+      if(gameState.health2>health2){
+        health2=health2+1
+      }
+      textMesh2._dirtyPosition=true;
+      textMesh2.position.set(0,-100,0);
+      console.log(textGeometry)
+      var loader = new THREE.FontLoader();
+      loader.load( '../fonts/helvetiker_regular.typeface.json',
+      function ( font ) {
+          textGeometry = new THREE.TextGeometry( "Avatar2 Health: "+gameState.health2, {
+          font: font,
+          size: 3,
+          height: 0.2,
+          curveSegments: 12,
+          bevelEnabled: true,
+          bevelThickness: 0.01,
+          bevelSize: 0.08,
+          bevelSegments: 5
+        } );
+        var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+        textMesh2 = new THREE.Mesh( textGeometry, textMaterial );
+        textMesh2.position.set(15,30,-20);
+        textMesh2.rotation.x=-.9;
+        scene.add(textMesh2)
+    })
+  }
+  if(gameState.score2!=score2) {
+    if(gameState.score2>score2) {
+      score2=score2+1;
+    }
+    if(gameState.score2<score2) {
+      score2=score2-1;
+    }
+    textMesh4._dirtyPosition=true;
+    textMesh4.position.set(0,-100,0);
+      var loader = new THREE.FontLoader();
+      loader.load( '../fonts/helvetiker_regular.typeface.json',
+     function ( font ) {
+      textGeometry = new THREE.TextGeometry( "Avatar2 Score: "+gameState.score2, {
+      font: font,
+      size: 3,
+      height: 0.2,
+      curveSegments: 12,
+      bevelEnabled: true,
+      bevelThickness: 0.01,
+      bevelSize: 0.08,
+      bevelSegments: 5
+    } );
+    var textMaterial = new THREE.MeshLambertMaterial( { color: 'black' } );
+    textMesh4 = new THREE.Mesh( textGeometry, textMaterial );
+    textMesh4.position.set(15,20,-20);
+    textMesh4.rotation.x=-.9;
+    scene.add(textMesh4);
+  })
+
+  }
+  }
 
 	/* Updates the hippo avatars motion
 	   Done by: Jin and Jerry */
-	  function updateAvatar(){
-		"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
-		var forward = avatar1.getWorldDirection();
-		var forward2 = avatar2.getWorldDirection();
+	function updateAvatar(){
+ 			"change the avatar's linear or angular velocity based on controls state (set by WSAD key presses)"
+ 			var forward = avatar1.getWorldDirection();
+ 			var forward2 = avatar2.getWorldDirection();
 
-		if (controls.fwd){
-			avatar1.setLinearVelocity(forward.multiplyScalar(controls.speed));
-		} else if (controls.bwd){
-			avatar1.setLinearVelocity(forward.multiplyScalar(-controls.speed));
-		} else {
-			var velocity = avatar1.getLinearVelocity();
-			velocity.x=velocity.z=0;
-			avatar1.setLinearVelocity(velocity); //stop the xz motion
-		}
+ 			if (controls.fwd){
+ 				avatar1.setLinearVelocity(forward.multiplyScalar(controls.speed));
+ 			} else if (controls.bwd){
+ 				avatar1.setLinearVelocity(forward.multiplyScalar(-controls.speed));
+ 			} else {
+ 				var velocity = avatar1.getLinearVelocity();
+ 				velocity.x=velocity.z=0;
+ 				avatar1.setLinearVelocity(velocity); //stop the xz motion
+ 			}
+ 			if (controls.fly){
+ 	      avatar1.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
+ 	    }
 
-		 if (controls.fly){
-			  avatar1.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
-		}
+ 			if (controls.left){
+ 				avatar1.setAngularVelocity(new THREE.Vector3(0,controls.speed*0.1,0));
+ 			} else if (controls.right){
+ 				avatar1.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
+ 			}
+ 			if (controls.reset1){
+ 	      avatar1.__dirtyPosition = true;
+ 	      avatar1.position.set(-60,2,-30);
+				avatar1.__dirtyRotation = true;
+				avatar1.rotation.set(0,0,0);
+				avatar1.setAngularVelocity(new THREE.Vector3((0,0,0)));
+				avatar1.setLinearVelocity(new THREE.Vector3((0,0,0)));
+				console.log("controls reset");
+				controls.reset1 = false;
+ 	    }
 
-		if (controls.left){
-			avatar1.setAngularVelocity(new THREE.Vector3(0,controls.speed*0.1,0));
-		} else if (controls.right){
-			avatar1.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
-		}
-
-		// AVATAR2
-		if (controls.fwd2){
-			avatar2.setLinearVelocity(forward2.multiplyScalar(controls.speed2));
-		} else if (controls.bwd2){
-			avatar2.setLinearVelocity(forward2.multiplyScalar(-controls.speed2));
-		} else {
-			var velocity2 = avatar2.getLinearVelocity();
-			velocity2.x=velocity2.z=0;
-			avatar2.setLinearVelocity(velocity2); //stop the xz motion
-		 }
-
-		if (controls.left2){
-			avatar2.setAngularVelocity(new THREE.Vector3(0,controls.speed2*0.1,0));
-		} else if (controls.right2){
-			avatar2.setAngularVelocity(new THREE.Vector3(0,-controls.speed2*0.1,0));
-		}
-
-		if (controls.reset){
-			avatar1.position.set(-60,1,-30);
-			avatar2.position.set(60,1,-30);
-		  avatar1.__dirtyPosition = true;
-			avatar2.__dirtyPosition = true;
-		}
-	}
+ 			// AVATAR2
+ 			if (controls.fwd2){
+ 				avatar2.setLinearVelocity(forward2.multiplyScalar(controls.speed2));
+ 			} else if (controls.bwd2){
+ 				avatar2.setLinearVelocity(forward2.multiplyScalar(-controls.speed2));
+ 			} else {
+ 			 	var velocity2 = avatar2.getLinearVelocity();
+ 			 	velocity2.x=velocity2.z=0;
+ 			 	avatar2.setLinearVelocity(velocity2); //stop the xz motion
+ 			 }
+ 			 if (controls.fly2){
+ 			 	avatar2.setLinearVelocity(new THREE.Vector3(0,controls.speed,0));
+ 			 }
+ 			if (controls.left2){
+ 				avatar2.setAngularVelocity(new THREE.Vector3(0,controls.speed2*0.1,0));
+ 			} else if (controls.right2){
+ 				avatar2.setAngularVelocity(new THREE.Vector3(0,-controls.speed2*0.1,0));
+ 			}
+ 			if (controls.reset2){
+ 				avatar2.__dirtyPosition = true;
+ 				avatar2.position.set(60,2,-30);
+				avatar2.__dirtyRotation = true;
+				avatar2.rotation.set(0,0,0);
+				avatar2.setAngularVelocity(new THREE.Vector3((0,0,0)));
+				avatar2.setLinearVelocity(new THREE.Vector3((0,0,0)));
+				controls.reset2 = false;
+				console.log("controls reset");
+ 			}
+ 	}
 
 	function updateSuzyOBJ(){
 		var t = clock.getElapsedTime();
@@ -555,18 +1065,35 @@
 		requestAnimationFrame( animate );
   		 gameState.camera = camera;
 		switch(gameState.scene) {
+			case "start":
+				sCamera = new THREE.PerspectiveCamera( 90, window.innerWidth / window.innerHeight, 0.1, 1000 );
+				sCamera.position.set(0,50,-120);
+				sCamera.lookAt(0,0,0);
+				renderer.render(startScene, sCamera);
+				break;
+
 			case "youwon":
 				endText.rotateY(0.005);
 				renderer.render( endScene, endCamera );
 				break;
 
-     			case "youlose":
+     	case "youlose":
 				renderer.render( endLoseScene, endCamera);
 				break;
 
 			case "main":
 				updateAvatar();
+				updateNPC();
+				updateNPC1();
 				updateSuzyOBJ();
+				updateText();
+				updateText2();
+
+				if(!play) {
+					sound.stop();
+				}else if(!sound.isPlaying) {
+							sound.play();
+				}
 
 	    	scene.simulate();
 				if (gameState.camera!= 'none'){
@@ -578,12 +1105,13 @@
 			  console.log("don't know the scene "+gameState.scene);
 		}
 
-	/* Display to the user their score
-	    Done by: Jerry and Allison */
-	  var info = document.getElementById("info");
-		var infohippo2 = document.getElementById("infohippo2");
-		info.innerHTML='<div style="font-size:15pt;color:orange;text-align:left">Score 1: ' + gameState.score +
-										' Health 1: '+ gameState.health + '</div>';
-		infohippo2.innerHTML='<div style="font-size:15pt;color:red;text-align:left">Score 2: ' + gameState.score2 +
-		 																' Health 2: '+ gameState.health2 + '</div>';
+	/* Display to the user instructions
+	    Done by: Allison */
+		if(begin && !start) {
+	  	var info = document.getElementById("info");
+			info.innerHTML='<div style="font-size:15pt;color:black;text-align:center">Eat colored balls for points and gold balls for health up. Avoid white balls and the red and blue blocks or your health will go down. <br>First hippo to 5 points wins, a hippo with negative health loses the game. Press m to mute and unmute the song.' + '</div>';
+		}else if(!begin && !start) {
+			var info = document.getElementById("info");
+			info.innerHTML='<div style="font-size:15pt;color:black;text-align:center">Thanks for playing! Press r to play again. </div>';
+		}
 }
