@@ -1,7 +1,7 @@
 /*
  * PA03 Group J-Crew
  */
-	console.log("Welcome to Hungry Hungry Hippos");
+console.log("Welcome to Hungry Hungry Hippos");
 	// Global variable declarations
 	var scene, renderer;
 	var camera, avatarCam;
@@ -28,7 +28,7 @@
 	var wall1, wall2, wall3;
 	var npc;
 	var npc1;
-  var loader = new THREE.FontLoader();
+  	var loader = new THREE.FontLoader();
 	var play = true;
 
 	var controls =
@@ -63,7 +63,6 @@
 			Defines different game scenes 		        *
 	****************************************************************/
 	function createMainScene(){
-
 		//Added by Aviya Zarur
 		wall1 = createBoxMesh(0x0000ff);
 		wall1.position.set(93,2,-8);
@@ -186,7 +185,6 @@
 	//NPC by Aviya Zarur
 		npc = createBoxMesh2(0x0000ff,1,2,4);
 		npc.position.set(-30,5,-30);
-		//npc.scale.set(1,2,4);
 		npc.addEventListener( 'collision',
 			function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 				if (other_object==avatar1){
@@ -211,7 +209,6 @@
   //NPC by Aviya Zarur
     npc1 = createBoxMesh2(0xff0000,1,2,4);
     npc1.position.set(30,5,-30);
-    //npc.scale.set(1,2,4);
     npc1.addEventListener( 'collision',
       function( other_object, relative_velocity, relative_rotation, contact_normal ) {
         if (other_object==avatar2){
@@ -517,7 +514,7 @@
 		var geometry = new THREE.PlaneGeometry(400, 258, 200 );
 		var texture = new THREE.TextureLoader().load( 'images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
-    texture.repeat.x = - 1;
+  		texture.repeat.x = - 1;
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
 		var mesh = new THREE.Mesh( geometry, material, 0 );
 		mesh.position.y=-2
@@ -540,7 +537,6 @@
 		var geometry = new THREE.BoxGeometry( w, h, d);
 		var material = new THREE.MeshLambertMaterial( { color: color} );
 		mesh = new Physijs.BoxMesh( geometry, material );
-		//mesh = new Physijs.BoxMesh( geometry, material,0 );
 		mesh.castShadow = true;
 		return mesh;
 	}
@@ -562,7 +558,7 @@
 	/* Added by: Allison and Alex */
 	function createHealthDownBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-    var texture = new THREE.TextureLoader().load( 'images/NewWhite.jpg' );
+    		var texture = new THREE.TextureLoader().load( 'images/NewWhite.jpg' );
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set( 0.1, 0.1 );
@@ -872,7 +868,7 @@
 
 			console.log(textGeometry)
 			var loader = new THREE.FontLoader();
-			loader.load( '/fonts/helvetiker_regular.typeface.json',
+			loader.load( 'fonts/helvetiker_regular.typeface.json',
 			function ( font ) {
 					textGeometry = new THREE.TextGeometry( "Avatar1 Health: "+gameState.health, {
 					font: font,
@@ -902,7 +898,7 @@
 			textMesh3._dirtyPosition=true;
 			textMesh3.position.set(0,-100,0);
 			var loader = new THREE.FontLoader();
-		loader.load( '/fonts/helvetiker_regular.typeface.json',
+		loader.load( 'fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar1 Score: "+gameState.score, {
 				font: font,
@@ -936,7 +932,7 @@
       textMesh2.position.set(0,-100,0);
       console.log(textGeometry)
       var loader = new THREE.FontLoader();
-      loader.load( '/fonts/helvetiker_regular.typeface.json',
+      loader.load( 'fonts/helvetiker_regular.typeface.json',
       function ( font ) {
           textGeometry = new THREE.TextGeometry( "Avatar2 Health: "+gameState.health2, {
           font: font,
@@ -965,7 +961,7 @@
     textMesh4._dirtyPosition=true;
     textMesh4.position.set(0,-100,0);
       var loader = new THREE.FontLoader();
-      loader.load( '/fonts/helvetiker_regular.typeface.json',
+      loader.load( 'fonts/helvetiker_regular.typeface.json',
      function ( font ) {
       textGeometry = new THREE.TextGeometry( "Avatar2 Score: "+gameState.score2, {
       font: font,
@@ -1013,8 +1009,8 @@
  				avatar1.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
  			}
  			if (controls.reset1){
- 	      avatar1.__dirtyPosition = true;
- 	      avatar1.position.set(-60,2,-30);
+ 	      			avatar1.__dirtyPosition = true;
+ 	      			avatar1.position.set(-60,2,-30);
 				avatar1.__dirtyRotation = true;
 				avatar1.rotation.set(0,0,0);
 				avatar1.setAngularVelocity(new THREE.Vector3((0,0,0)));
@@ -1075,7 +1071,7 @@
 				renderer.render( endScene, endCamera );
 				break;
 
-     	case "youlose":
+    		 	case "youlose":
 				renderer.render( endLoseScene, endCamera);
 				break;
 
@@ -1090,7 +1086,7 @@
 				if(!play) {
 					sound.stop();
 				}else if(!sound.isPlaying) {
-							sound.play();
+					sound.play();
 				}
 
 	    	scene.simulate();
