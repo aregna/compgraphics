@@ -39,7 +39,7 @@
 	     {score:0, health:5, score2:0, health2:5, scene:'start', camera:'none' }
 
 	// Main game control
-  init();
+  	init();
 	initControls();
 	createStartScene();
 	animate();
@@ -102,7 +102,7 @@
 
 		// Four text meshes for scores and health
     // Added by Jerry
-		loader.load( '../fonts/helvetiker_regular.typeface.json',
+		loader.load( 'fonts/helvetiker_regular.typeface.json',
 		function ( font ) {
 				textGeometry = new THREE.TextGeometry( "Avatar1 Health: "+gameState.health, {
 				font: font,
@@ -423,7 +423,7 @@
 
 		// load a sound and set it as the Audio object's buffer
 		var audioLoader = new THREE.AudioLoader();
-		audioLoader.load( '/sounds/HippoSong.mp3', function( buffer ) {
+		audioLoader.load( 'sounds/HippoSong.mp3', function( buffer ) {
 			sound.setBuffer( buffer );
 			sound.setLoop( true );
 			sound.setVolume( 0.05 );
@@ -488,7 +488,7 @@
 	****************************************************************/
 	function createGround(image){
 		var geometry = new THREE.PlaneGeometry( 200, 100, 128 );
-		var texture = new THREE.TextureLoader().load( '/images/'+image );
+		var texture = new THREE.TextureLoader().load( 'images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( 15, 15 );
@@ -502,7 +502,7 @@
 
 	function createSkyBox(image,k){
 		var geometry = new THREE.SphereGeometry(400, 20, 20 );
-		var texture = new THREE.TextureLoader().load( '/images/'+image );
+		var texture = new THREE.TextureLoader().load( 'images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
 		texture.wrapT = THREE.RepeatWrapping;
 		texture.repeat.set( k, k );
@@ -515,7 +515,7 @@
   // Added by Jerry
 	function createPlaneBox(image){
 		var geometry = new THREE.PlaneGeometry(400, 258, 200 );
-		var texture = new THREE.TextureLoader().load( '/images/'+image );
+		var texture = new THREE.TextureLoader().load( 'images/'+image );
 		texture.wrapS = THREE.RepeatWrapping;
     texture.repeat.x = - 1;
 		var material = new THREE.MeshLambertMaterial( { color: 0xffffff,  map: texture, side:THREE.DoubleSide} );
@@ -562,7 +562,7 @@
 	/* Added by: Allison and Alex */
 	function createHealthDownBall() {
 		var geometry = new THREE.SphereGeometry( 1, 16, 16);
-    var texture = new THREE.TextureLoader().load( '/images/NewWhite.jpg' );
+    var texture = new THREE.TextureLoader().load( 'images/NewWhite.jpg' );
                 texture.wrapS = THREE.RepeatWrapping;
                 texture.wrapT = THREE.RepeatWrapping;
                 texture.repeat.set( 0.1, 0.1 );
@@ -742,7 +742,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader6.load("/models/Palm4.obj",
+			loader6.load("models/Palm4.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
