@@ -603,7 +603,7 @@
 	var loader5 = new THREE.OBJLoader();
 	var loader6 = new THREE.OBJLoader();
 
-		loader.load("/models/hipp.obj",
+		loader.load("models/hipp.obj",
 				function ( obj ) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -631,7 +631,7 @@
 				}
 			)
 
-			loader2.load("/models/hipp.obj",
+			loader2.load("models/hipp.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -661,7 +661,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader3.load("/models/Palm1.obj",
+			loader3.load("models/Palm1.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -688,7 +688,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader4.load("/models/Palm2.obj",
+			loader4.load("models/Palm2.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
@@ -715,7 +715,7 @@
 					console.log("error in loading: "+err);}
 			)
 
-			loader5.load("/models/Palm3.obj",
+			loader5.load("models/Palm3.obj",
 				function ( obj) {
 					console.log("loading obj file");
 					console.dir(obj);
