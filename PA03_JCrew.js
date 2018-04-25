@@ -1,5 +1,7 @@
 /*
- * PA03 Group J-Crew
+ * Final Project COSI155B 
+ * Brandeis University 
+ * Authors: Jin Sung Byun, Jerry Miller, Allison Regna, Alexander Rubin, Aviya Zarur
  */
 console.log("Welcome to Hungry Hungry Hippos");
 	// Global variable declarations
