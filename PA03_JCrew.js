@@ -318,7 +318,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 			 	function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 			 		if (other_object== avatar1){
 			 			console.log("Another ball was eaten!");
-			 			soundEffect('sounds/good.wav');
+			 			soundEffect('good.wav');
 			 			gameState.score += 1;  // add one to the score
 			 			if (gameState.score>= 5) {
 							initEndScenes();
@@ -330,7 +330,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 			 		}
 					if (other_object== avatar2){
 			 			console.log("Another ball was eaten!");
-			 			soundEffect('sounds/good.wav');
+			 			soundEffect('good.wav');
 			 			gameState.score2 += 1;  // add one to the score
 			 			if (gameState.score2>= 5) {
 							initEndScenes();
@@ -352,7 +352,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 					function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 						if (other_object== avatar1){
 							console.log("Uh oh, hippo ate a bad ball!");
-							soundEffect('sounds/bad.wav');
+							soundEffect('bad.wav');
 							gameState.health -= 1;  // add one to the score
 							if (gameState.health < 0) {
 								initEndScenes();
@@ -364,7 +364,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 						}
 						if (other_object== avatar2){
 							console.log("Uh oh, hippo ate a bad ball!");
-							soundEffect('sounds/bad.wav');
+							soundEffect('bad.wav');
 							gameState.health2 -= 1;  // add one to the score
 							if (gameState.health2 < 0) {
 								initEndScenes();
@@ -387,7 +387,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 					function( other_object, relative_velocity, relative_rotation, contact_normal ) {
 						if (other_object== avatar1){
 							console.log("Healthy Ball was eaten!");
-							soundEffect('sounds/good.wav');
+							soundEffect('good.wav');
 							gameState.health += 1;
 							// make the ball drop below the scene ..
 							this.position.y = this.position.y - 100;
@@ -395,7 +395,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 						}
 						if (other_object== avatar2){
 							console.log("Healthy Ball was eaten!");
-							soundEffect('sounds/good.wav');
+							soundEffect('good.wav');
 							gameState.health2 += 1;
 							// make the ball drop below the scene ..
 							this.position.y = this.position.y - 100;
@@ -438,7 +438,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 
 		// load a sound and set it as the Audio object's buffer
 		var audioLoader = new THREE.AudioLoader();
-		audioLoader.load( '/sounds/'+file, function( buffer ) {
+		audioLoader.load( 'sounds/'+file, function( buffer ) {
 			sound.setBuffer( buffer );
 			sound.setLoop( false );
 			sound.setVolume( 0.5 );
