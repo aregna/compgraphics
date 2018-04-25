@@ -460,7 +460,7 @@
 
 	function initPhysijs(){
 	    Physijs.scripts.worker = 'js/physijs_worker.js';
-	    Physijs.scripts.ammo = 'js/ammo.js';
+	    Physijs.scripts.ammo = 'cs155b_J-Crew/js/ammo.js';
 	}
 
 	function initRenderer(){
