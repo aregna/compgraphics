@@ -214,11 +214,8 @@ console.log("Welcome to Hungry Hungry Hippos");
     npc1.addEventListener( 'collision',
       function( other_object, relative_velocity, relative_rotation, contact_normal ) {
         if (other_object==avatar2){
-            console.log("npc"+i+" hit the avatar");
             gameState.health2=gameState.health2-1;
-            console.log(gameState.health2);
             if(gameState.health2==0){
-                    console.log("minus");
                     gameState.scene='youlose';
             }
         this.position.y = this.position.y - 100;
@@ -229,9 +226,8 @@ console.log("Welcome to Hungry Hungry Hippos");
       }
     )
     scene.add(npc1);
-    console.dir(npc1);
-
   }
+
   /* Done by: Jerry */
   function createStartScene(){
     startScene = initScene();
@@ -510,8 +506,9 @@ console.log("Welcome to Hungry Hungry Hippos");
 		mesh.receiveShadow = false;
 		return mesh;
 	}
+
 	// Plane for start scene
-  // Added by Jerry
+  	// Added by Jerry
 	function createPlaneBox(image){
 		var geometry = new THREE.PlaneGeometry(400, 258, 200 );
 		var texture = new THREE.TextureLoader().load( 'images/'+image );
@@ -605,7 +602,6 @@ console.log("Welcome to Hungry Hungry Hippos");
 				function ( obj ) {
 					console.log("loading obj file");
 					console.dir(obj);
-					//scene.add(obj);
 					obj.castShadow = true;
 					suzyOBJ = obj;
 					// look inside the OBJ which was imported and find the geometry and material
@@ -823,7 +819,6 @@ console.log("Welcome to Hungry Hungry Hippos");
 			npc.lookAt(avatar1.position);
 			npc.__dirtyPosition = true;
 			if(avatar1.position.x-npc.position.x<20 && npc.position.x-avatar1.position.x<20){
-					console.log(avatar1.position.x-npc.position.x);
 					npc.setLinearVelocity(npc.getWorldDirection().multiplyScalar(1));
 			}
 		}
@@ -832,7 +827,6 @@ console.log("Welcome to Hungry Hungry Hippos");
 			npc1.lookAt(avatar2.position);
 			npc1.__dirtyPosition = true;
 			if(avatar2.position.x-npc1.position.x<20 && npc1.position.x-avatar2.position.x<20){
-					console.log(avatar2.position.x-npc1.position.x);
 					npc1.setLinearVelocity(npc1.getWorldDirection().multiplyScalar(1));
 			}
 		}
@@ -868,7 +862,7 @@ console.log("Welcome to Hungry Hungry Hippos");
 			textMesh._dirtyPosition=true;
 			textMesh.position.set(0,-100,0);
 
-			console.log(textGeometry)
+			//console.log(textGeometry)
 			var loader = new THREE.FontLoader();
 			loader.load( 'fonts/helvetiker_regular.typeface.json',
 			function ( font ) {
@@ -932,7 +926,7 @@ console.log("Welcome to Hungry Hungry Hippos");
       }
       textMesh2._dirtyPosition=true;
       textMesh2.position.set(0,-100,0);
-      console.log(textGeometry)
+      //console.log(textGeometry)
       var loader = new THREE.FontLoader();
       loader.load( 'fonts/helvetiker_regular.typeface.json',
       function ( font ) {
@@ -1010,7 +1004,7 @@ console.log("Welcome to Hungry Hungry Hippos");
  			} else if (controls.right){
  				avatar1.setAngularVelocity(new THREE.Vector3(0,-controls.speed*0.1,0));
  			}
- 			if (controls.reset1){
+ 			if (controls.reset1){ //done by allison
  	      			avatar1.__dirtyPosition = true;
  	      			avatar1.position.set(-60,2,-30);
 				avatar1.__dirtyRotation = true;
@@ -1039,7 +1033,7 @@ console.log("Welcome to Hungry Hungry Hippos");
  			} else if (controls.right2){
  				avatar2.setAngularVelocity(new THREE.Vector3(0,-controls.speed2*0.1,0));
  			}
- 			if (controls.reset2){
+ 			if (controls.reset2){ //done by allison
  				avatar2.__dirtyPosition = true;
  				avatar2.position.set(60,2,-30);
 				avatar2.__dirtyRotation = true;
